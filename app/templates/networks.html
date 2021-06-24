@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h3>Networks</h3>
+    {% if not networks %}
+            <div class="well">
+                <h4> You do not have any virtual networks</h4>
+            </div>
+    {% else %}
+    {% for pool in networks %}
+    <div class="card mt-5">
+        <h5 class="card-header {% if pool.status %}bg-success {% else %}bg-danger {% endif %}">{{pool.name}}</h5>
+        <div class="card-body">
+            <p>Device: {{ pool.device }}</p>
+            <p>Forward: {{ pool.forward|upper }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}

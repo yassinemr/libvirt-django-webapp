@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+<h3>Instances</h3>
+{% if instances %}
+    <div class="table-responsive mt-5">
+        <table class="table" id="sortTable">
+            <thead>
+            <tr class="active">
+                <th>Name </th>
+                <th>Status</th>
+                <th>VCPUs</th>
+                <th>Memory</th>
+                <th style="width:252px;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for inst in instances %}
+                <tr id="{{ inst.name }}">
+                    <td><a href="#"><i
+                            class="icon-th-large"></i> {{ inst.name }}</a></td>
+                    <td>{% ifequal inst.status 1 %}
+                        <span class="text-success">Running</span>
+                    {% endifequal %}
+                        {% ifequal inst.status 5 %}
+                            {% ifequal inst.has_managed_save_image 1 %}
+                                <span class="text-warning">Saved</span>
+                            {% else %}
+                                <span class="text-danger">Shutoff</span>
+                            {% endifequal %}
+                        {% endifequal %}
+                        {% ifequal inst.status 3 %}
+                            <span class="text-warning">Suspend</span>
+                        {% endifequal %}
+                    </td>
+                    <td>{{ inst.vcpu }}</td>
+                    <td>{{ inst.memory }}MB</td>
+                    <td>
+                        <form action="" method="post" role="form">{% csrf_token %}
+                            <input type="hidden" name="name" value="{{ inst.name }}"/>
+                            {% ifequal inst.status 5 %}
+                                <button class="btn btn-light" type="submit" name="start" title="Start">
+                                    <img src="https://img.icons8.com/material/24/000000/play--v2.png"/>
+                                </button>
+                                <button class="btn btn-light disabled" title="Suspend">
+                                    <img src="https://img.icons8.com/material/24/000000/pause--v1.png"/>
+                                </button>
+                                <button class="btn btn-light disabled" title="Save">
+                                    <img src="https://img.icons8.com/material/24/000000/save--v1.png"/>
+                                </button>
+                                {% ifequal inst.has_managed_save_image 1 %}
+                                    <button class="btn btn-light" type="submit" name="deletesaveimage"
+                                            title="Delete Save Image">
+                                        <img src="https://img.icons8.com/material/24/000000/filled-trash.png"/>
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-light disabled" title="Shutdown">
+                                        <img src="https://img.icons8.com/material/24/000000/stop--v1.png"/>
+                                    </button>
+                                {% endifequal %}
+                            {% endifequal %}
+                            {% ifequal inst.status 3 %}
+                                <button class="btn btn-sm btn-default" type="submit" name="resume"
+                                        title="Resume">
+                                    <img src="https://img.icons8.com/material/24/000000/play--v2.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default disabled" title="Suspend">
+                                    <img src="https://img.icons8.com/material/24/000000/pause--v1.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default" type="submit" name="managedsave"
+                                        title="Save">
+                                    <img src="https://img.icons8.com/material/24/000000/save--v1.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default disabled" title="Shutdown">
+                                    <img src="https://img.icons8.com/material/24/000000/shutdown.png"/>
+                                </button>
+                                
+                            {% endifequal %}
+                            {% ifequal inst.status 1 %}
+                                <button class="btn btn-sm btn-default disabled" title="Start">
+                                    <img src="https://img.icons8.com/material/24/000000/play--v2.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default" type="submit" name="suspend"
+                                        title="Suspend">
+                                    <img src="https://img.icons8.com/material/24/000000/pause--v1.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default" type="submit" name="shutdown"
+                                        title="Shutdown">
+                                    <img src="https://img.icons8.com/material/24/000000/shutdown.png"/>
+                                </button>
+                                <button class="btn btn-sm btn-default" type="submit" name="destroy"
+                                        title="Force Shutdown"
+                                        onclick="return confirm('Are you sure?')">
+                                    <img src="https://img.icons8.com/material/24/000000/stop--v1.png"/>
+                                </button>
+                            {% endifequal %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+            <div class="well">
+                <h4>You do not have any Virtual Machines</h4>
+            </div>
+        {% endif %}
+</div>
+{% endblock %}

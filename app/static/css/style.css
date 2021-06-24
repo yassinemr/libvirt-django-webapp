@@ -1,0 +1,23 @@
+@media (min-width: 992px){
+    .navbar-expand-lg .navbar-collapse {
+        display: flex!important;
+        flex-basis: auto;
+        justify-content: flex-end;
+        margin-right: 4rem;
+    }
+    }
+    .navbar-brand {
+    margin-left: 3rem;
+    }
+
+.details__host{
+    display: flex;
+}
+
+.infos span{
+    margin-left: 2rem;
+}
+
+.btn img{
+    width: 1rem;
+}
